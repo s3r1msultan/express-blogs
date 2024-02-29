@@ -1,12 +1,18 @@
 import { Blog } from "../models/blog.js";
+import axios from "axios";
 import { user } from "./signInHandler.js";
 
-export const blogsGet = (req, res) => {
+export const blogsGet = async (req, res) => {
+  const response = await axios.get('https://zenquotes.io/api/random').then(res => res);
+  const quoteData = response.data[0];
+  const quote = quoteData.q + " - " + quoteData.a;
+
   Blog.find()
     .then((blogs) => {
       res.status(200);
 
       res.render("blogs", {
+        quote,
         blogs: blogs,
         title: "All blogs",
         isVerified: req.signedCookies.isVerified,
@@ -108,7 +114,7 @@ export async function addComment(req, res) {
     blog.comments.push({ author, content });
     await blog.save();
 
-    res.status(201).redirect("back");
+    res.status(201);
   } catch (error) {
     res.status(500).send("Server error");
     console.log(error);

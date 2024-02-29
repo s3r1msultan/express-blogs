@@ -11,15 +11,15 @@
           <h3 class="text-primary"><%= blog.author %></h3>
         </div>
         <div class="col">
-          <h4>Content:</h4>
+          <h4><% if (language==="en") { %> Content <% } else {%> Содержание <% } %>:</h4>
           <p class="fs-4"><%= blog.content %></p>
 
           
      <% if (isAdmin === "true") { %>
   <form id="blogEditForm" class="mt-4">
-    <h4>Edit Blog:</h4>
+    <h4><% if (language==="en") { %> Edit Blog <% } else {%> Редактировать пост <% } %>:</h4>
     <div class="mb-2">
-      <label for="editTitle" class="form-label">Title:</label>
+      <label for="editTitle" class="form-label"><% if (language==="en") { %> Title <% } else {%> Заголовок <% } %>:</label>
       <input type="text" class="form-control" id="editTitle" name="title" value="<%= blog.title %>" required>
     </div>
     <div class="mb-2">
@@ -32,12 +32,12 @@
         <input type="text" class="form-control" name="url_imgs[]" value="<%= img %>" placeholder="Image URL">
       </div>
     <% }); %>
-    <button type="button" id="updateBlog" class="btn btn-primary mt-2">Update Blog</button>
+    <button type="button" id="updateBlog" class="btn btn-primary mt-2"><% if (language==="en") { %> Update blog <% } else {%> Обновить пост <% } %></button>
   </form>
 <% } %>
 
             <div class="comments-section mt-4">
-              <h4>Comments:</h4>
+              <h4><% if (language==="en") { %> Comments <% } else {%> Комментарии <% } %>:</h4>
               <% if (blog.comments && blog.comments.length > 0) { %>
                 <% blog.comments.forEach(function(comment) { %>
                   <div class="card mb-3">
@@ -51,7 +51,7 @@
                   </div>
                 <% }); %>
               <% } else { %>
-                <p>No comments yet.</p>
+                <p><% if (language==="en") { %> No comments yet <% } else {%> Еще ни одного комментария <% } %>.</p>
               <% } %>
             </div>
 
@@ -63,14 +63,15 @@
       <% if (isLoggedIn === "true" && isAdmin === "false") { %>
         <% if (isVerified === "true") { %>
           <div class="comment-form">
-            <h4>Leave a Comment:</h4>
+            <h4><% if (language==="en") { %> Leave a comment <% } else {%> Оставьте комментарий <% } %>:</h4>
             <form id="commentForm">
               <textarea id="commentContent" class="form-control" placeholder="Your comment" required></textarea>
-              <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+              <button type="submit" class="btn btn-primary mt-2"><% if (language==="en") { %> Post comment <% } else {%> Опубликовать комментарий <% } %></button>
             </form>
           </div>
       <% } else { %>
-          <p class="alert alert-warning">You must be verified to post comments. Please check your email for the verification link.</p>
+          <p class="alert alert-warning"><% if (language==="en") { %>You must be verified to post comments. Please check your email for the verification link <% } else {%> Вы должны быть верифицированы, чтобы оставлять комментарии. Пожалуйста, проверьте свою электронную почту на наличие ссылки для проверки <% } %>
+.</p>
         <% } %>
       <% } %>
         </div>
@@ -99,7 +100,7 @@
             e.preventDefault();
             const content = document.getElementById("commentContent").value.trim();
             if (content) {
-                const url = window.location.href.replace(/\/$/, "") + "/comments"; // Remove trailing slash if exists, then append '/comments'
+                const url = window.location.href.replace(/\/$/, "") + "/comments";
                 try {
                     const response = await fetch(url, {
                         method: "POST",
@@ -110,11 +111,12 @@
                     });
                     if (!response.ok) {
                         throw new Error('Network response was not ok.');
+                    } else {
+                      window.location.reload();
                     }
-                    // Assuming the server responds with JSON including the status of the comment addition
                     const data = await response.json();
-                    console.log(data); // Handle response
-                    location.reload(); // Consider dynamically updating the DOM instead
+                    console.log(data); 
+                    location.reload();
                 } catch (error) {
                     console.error("Error posting comment:", error);
                 }
@@ -122,34 +124,7 @@
         });
     }
 });
-
- document.addEventListener("DOMContentLoaded", () => {
-    const updateBlogBtn = document.getElementById("updateBlog");
-    updateBlogBtn.addEventListener("click", async () => {
-      const formData = {
-        title: document.getElementById("editTitle").value,
-        content: document.getElementById("editContent").value,
-        url_imgs: Array.from(document.querySelectorAll("input[name='url_imgs[]']")).map(input => input.value)
-      };
-      
-      try {
-        const response = await fetch("/blogs/<%= blog._id %>", {
-          method: "PUT", // Use PUT method
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(formData)
-        });
-        if (!response.ok) throw new Error('Network response was not ok.');
-        alert('Blog updated successfully!');
-        window.location.reload(); // Reload the page to see the updated info
-      } catch (error) {
-        console.error("Error updating blog:", error);
-        alert('Failed to update the blog.');
-      }
-    });
-  });
       </script>
-    <%- include('./../blocks/footer.ejs') %>
+    <%- include('./../blocks/footer.ejs', {language}) %>
   </body>
 </html>

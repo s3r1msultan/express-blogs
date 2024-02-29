@@ -1,39 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('./../blocks/head.ejs', {title: 'User Profile'}) %>
-  <body>
-    <%- include('./../blocks/header.ejs', {isLoggedIn, isLoggedIn, isAdmin}) %>
-    <main class="container my-5">
-      <h2 class="mb-4">Profile</h2>
-      <div class="user-info mb-5">
-        <h3>Personal Information</h3>
-        <p><strong>Username:</strong> <%= user.username %></p>
-        <p><strong>Email:</strong> <%= user.email %></p>
-        <p><strong>First Name:</strong> <%= user.first_name %></p>
-        <p><strong>Last Name:</strong> <%= user.last_name %></p>
-      </div>
+	<%- include('./../blocks/head.ejs', {title: 'User Profile'}) %>
+	<body>
+		<%- include('./../blocks/header.ejs', {isLoggedIn, isLoggedIn, isAdmin,
+		language}) %>
+		<main class="container my-5">
+			<h2 class="mb-4">
+				<% if (language==="en") { %> Profile <% } else {%> Профиль <% } %>
+			</h2>
+			<div class="user-info mb-5">
+				<h3>
+					<% if (language==="en") { %> Personal Information <% } else {%> Личные
+					данные <% } %>
+				</h3>
+				<p>
+					<strong
+						><% if (language==="en") { %> Username <% } else {%> Имя
+						пользователя <% } %>:</strong
+					>
+					<%= user.username %>
+				</p>
+				<p><strong>Email:</strong> <%= user.email %></p>
+				<p>
+					<strong
+						><% if (language==="en") { %> First Name <% } else {%> Имя <% }
+						%>:</strong
+					>
+					<%= user.first_name %>
+				</p>
+				<p>
+					<strong
+						><% if (language==="en") { %> Last Name <% } else {%> Фамилия <% }
+						%>:</strong
+					>
+					<%= user.last_name %>
+				</p>
+			</div>
 
-      <div class="user-comments">
-        <h3>My Comments</h3>
-        <% if (userComments && userComments.length > 0) { %>
-        <ul class="list-group">
-          <% userComments.forEach(function(comment) { %>
-          <li class="list-group-item">
-            <p><strong>Comment on Blog:</strong> <%= comment.blogTitle %></p>
-            <p><strong>Content:</strong> <%= comment.content %></p>
-            <% if (comment.createdAt) { %>
-            <p class="text-muted">
-              <small><%= new Date(comment.createdAt).toLocaleString() %></small>
-            </p>
-            <% } %>
-          </li>
-          <% }); %>
-        </ul>
-        <% } else { %>
-        <p>You have not made any comments yet.</p>
-        <% } %>
-      </div>
-    </main>
-    <%- include('./../blocks/footer.ejs') %>
-  </body>
+			<div class="user-comments">
+				<h3>
+					<% if (language==="en") { %> My comments <% } else {%> Мои комментарии
+					<% } %>
+				</h3>
+				<% if (userComments && userComments.length > 0) { %>
+				<ul class="list-group">
+					<% userComments.forEach(function(comment) { %>
+					<li class="list-group-item">
+						<p>
+							<strong
+								><% if (language==="en") { %> Comment on blog <% } else {%>
+								Комментарий к блогу <% } %>:</strong
+							>
+							<%= comment.blogTitle %>
+						</p>
+						<p>
+							<strong
+								><% if (language==="en") { %> Content <% } else {%> Содержание
+								<% } %>:</strong
+							>
+							<%= comment.content %>
+						</p>
+						<% if (comment.createdAt) { %>
+						<p class="text-muted">
+							<small><%= new Date(comment.createdAt).toLocaleString() %></small>
+						</p>
+						<% } %>
+					</li>
+					<% }); %>
+				</ul>
+				<% } else { %>
+				<p>
+					<% if (language==="en") { %> You have not made any comments yet. <% }
+					else {%> Вы еще не написали ни одного комментария. <% } %>
+				</p>
+				<% } %>
+			</div>
+		</main>
+		<%- include('./../blocks/footer.ejs', {language}) %>
+	</body>
 </html>

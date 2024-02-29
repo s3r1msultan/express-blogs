@@ -1,8 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('./../blocks/head.ejs', {title: title}) %>
-  <body>
-    <%- include('./../blocks/header.ejs', {isLoggedIn: isLoggedIn, isAdmin: isAdmin}) %> <%-
-    include('./../blocks/footer.ejs') %>
-  </body>
+	<%- include('./../blocks/head.ejs', {title: title}) %>
+	<body>
+		<%- include('./../blocks/header.ejs', {isLoggedIn: isLoggedIn, isAdmin:
+		isAdmin}) %>
+		
+			<main>
+			  <div class="container">
+				<div class="text-center">
+				  <% if (language == "ru") { %>
+					<h1 class="display-4 fw-bold mb-4">Добро пожаловать в мой проект</h1>
+					<p class="lead">
+					  Этот проект - результат моей работы над курсом <strong>Технологии веб-разработки</strong> в <strong>Astana IT University</strong>.
+					</p>
+					<p>
+					  Основываясь на <strong>Express.js</strong> и <strong>MongoDB</strong>, этот веб-сайт предлагает динамичный пользовательский опыт с использованием <strong>EJS</strong> для серверного рендеринга страниц и <strong>Bootstrap</strong> для адаптивного дизайна.
+					</p>
+					<p>
+					  Включает в себя функционал для авторизации и регистрации пользователей, управления профилем, а также разделы с использованием внешних API для демонстрации разнообразного контента.
+					</p>
+					<p>
+					  <strong>Особенности:</strong>
+					  <ul class="text-start">
+						<li>Авторизация и управление профилем пользователя.</li>
+						<li>Интеграция с внешними API для отображения случайных вдохновляющих фактов.</li>
+						<li>Модуль блога для публикации и управления статьями.</li>
+						<li>Административная панель для управления пользователями и контентом.</li>
+					  </ul>
+					</p>
+					<p>
+					  <strong>Для доступа к полному функционалу:</strong>
+					  <br>
+					  Админ: <em>admin</em> / Пароль: <em>admin</em>
+					  <br>
+					  Пользователь: <em>s3r1msultan</em> / Пароль: <em>1234</em>
+					</p>
+				  <% } else { %>
+					<h1 class="display-4 fw-bold mb-4">Welcome to My Project</h1>
+					<p class="lead">
+					  This project is the culmination of my work for the <strong>Web Technologies</strong> course at <strong>Astana IT University</strong>.
+					</p>
+					<p>
+					  Built on <strong>Express.js</strong> and <strong>MongoDB</strong>, this website offers a dynamic user experience with <strong>EJS</strong> for server-side page rendering and <strong>Bootstrap</strong> for a responsive design.
+					</p>
+					<p>
+					  Features include user authentication and profile management, sections utilizing external APIs to showcase a variety of content, and a blogging module.
+					</p>
+					<p>
+					  <strong>Features:</strong>
+					  <ul class="text-start">
+						<li>User authentication and profile management.</li>
+						<li>Integration with external APIs for displaying inspirational random facts, some photos.</li>
+						<li>Blog module for posting and managing articles.</li>
+						<li>Admin panel for user and content management.</li>
+					  </ul>
+					</p>
+					<p>
+					  <strong>To access full features:</strong>
+					  <br>
+					  Admin: <em>admin</em> / Password: <em>admin</em>
+					  <br>
+					  User: <em>s3r1msultan</em> / Password: <em>1234</em>
+					</p>
+				  <% } %>
+				</div>
+				<div class="mt-5">
+					<div class="row">
+					  <div class="col-lg-6 mb-4">
+						<img src="<%= catImageUrl %>" alt="Random Cat" class="img-fluid rounded">
+					  </div>
+					  <div class="col-lg-6 mb-4">
+						<img src="<%= dogImageUrl %>" alt="Random Dog" class="img-fluid rounded">
+					  </div>
+					</div>
+				  </div>
+			</main>
+
+		
+		<%- include('./../blocks/footer.ejs', {language}) %>
+	</body>
 </html>
