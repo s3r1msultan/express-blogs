@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./../blocks/head.ejs', {title: blog.title}) %>
+  <body>
+    <%- include('./../blocks/header.ejs', {isLoggedIn, isAdmin, language}) %>
+    <body>
+      <main class="container my-5">
+      <div class="row">
+        <div class="col-4">
+          <h2 class="fs-2"><%= blog.title %></h2>
+          <h3 class="text-primary"><%= blog.author %></h3>
+        </div>
+        <div class="col">
+          <h4>Content:</h4>
+          <p class="fs-4"><%= blog.content %></p>
+
+          
+     <% if (isAdmin === "true") { %>
+  <form id="blogEditForm" class="mt-4">
+    <h4>Edit Blog:</h4>
+    <div class="mb-2">
+      <label for="editTitle" class="form-label">Title:</label>
+      <input type="text" class="form-control" id="editTitle" name="title" value="<%= blog.title %>" required>
+    </div>
+    <div class="mb-2">
+      <label for="editContent" class="form-label">Content:</label>
+      <textarea class="form-control" id="editContent" name="content" rows="4" required><%= blog.content %></textarea>
+    </div>
+    <h5>Image URLs:</h5>
+    <% blog.url_imgs.forEach(function(img, index) { %>
+      <div class="mb-2">
+        <input type="text" class="form-control" name="url_imgs[]" value="<%= img %>" placeholder="Image URL">
+      </div>
+    <% }); %>
+    <button type="button" id="updateBlog" class="btn btn-primary mt-2">Update Blog</button>
+  </form>
+<% } %>
+
+            <div class="comments-section mt-4">
+              <h4>Comments:</h4>
+              <% if (blog.comments && blog.comments.length > 0) { %>
+                <% blog.comments.forEach(function(comment) { %>
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= comment.author %></h5>
+                      <p class="card-text"><%= comment.content %></p>
+                      <% if (comment.createdAt) { %>
+                        <p class="text-muted"><small><%= new Date(comment.createdAt).toLocaleString() %></small></p>
+                      <% } %>
+                    </div>
+                  </div>
+                <% }); %>
+              <% } else { %>
+                <p>No comments yet.</p>
+              <% } %>
+            </div>
+
+
+
+
+
+
+      <% if (isLoggedIn === "true" && isAdmin === "false") { %>
+        <% if (isVerified === "true") { %>
+          <div class="comment-form">
+            <h4>Leave a Comment:</h4>
+            <form id="commentForm">
+              <textarea id="commentContent" class="form-control" placeholder="Your comment" required></textarea>
+              <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+            </form>
+          </div>
+      <% } else { %>
+          <p class="alert alert-warning">You must be verified to post comments. Please check your email for the verification link.</p>
+        <% } %>
+      <% } %>
+        </div>
+      </div>
+
+     
+      
+    </main>
+      <script>
+        document.getElementById("delete")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if(confirm("Are you sure?")) {
+                await fetch(window.location.href, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                }).then(res => res.json()).then(window.location.replace("/blogs")).catch(error => console.log(error))
+            }
+        })
+
+        document.addEventListener("DOMContentLoaded", () => {
+    const commentForm = document.getElementById("commentForm");
+    if (commentForm) {
+        commentForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const content = document.getElementById("commentContent").value.trim();
+            if (content) {
+                const url = window.location.href.replace(/\/$/, "") + "/comments"; // Remove trailing slash if exists, then append '/comments'
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify({ content })
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    // Assuming the server responds with JSON including the status of the comment addition
+                    const data = await response.json();
+                    console.log(data); // Handle response
+                    location.reload(); // Consider dynamically updating the DOM instead
+                } catch (error) {
+                    console.error("Error posting comment:", error);
+                }
+            }
+        });
+    }
+});
+
+ document.addEventListener("DOMContentLoaded", () => {
+    const updateBlogBtn = document.getElementById("updateBlog");
+    updateBlogBtn.addEventListener("click", async () => {
+      const formData = {
+        title: document.getElementById("editTitle").value,
+        content: document.getElementById("editContent").value,
+        url_imgs: Array.from(document.querySelectorAll("input[name='url_imgs[]']")).map(input => input.value)
+      };
+      
+      try {
+        const response = await fetch("/blogs/<%= blog._id %>", {
+          method: "PUT", // Use PUT method
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        });
+        if (!response.ok) throw new Error('Network response was not ok.');
+        alert('Blog updated successfully!');
+        window.location.reload(); // Reload the page to see the updated info
+      } catch (error) {
+        console.error("Error updating blog:", error);
+        alert('Failed to update the blog.');
+      }
+    });
+  });
+      </script>
+    <%- include('./../blocks/footer.ejs') %>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../blocks/head.ejs', { title: "Admin Panel" }) %>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <%- include('../blocks/header.ejs', { isLoggedIn, isAdmin, language,}) %>
+    <main class="container my-5">
+      <h1>Admin Panel - User Management</h1>
+
+      <button
+        type="button"
+        class="btn btn-primary mb-3"
+        data-toggle="modal"
+        data-target="#createUserModal"
+      >
+        Add New User
+      </button>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.username %></td>
+            <td><%= user.email %></td>
+            <td>
+              <button
+                class="btn btn-secondary btn-sm"
+                data-toggle="modal"
+                data-target="#editUserModal<%= user._id %>"
+              >
+                Edit
+              </button>
+
+              <form
+                action="/admin/users/<%= user._id %>?_method=DELETE"
+                method="POST"
+                style="display: inline"
+              >
+                <input
+                  type="hidden"
+                  name="_method"
+                  value="DELETE"
+                />
+                <button
+                  type="submit"
+                  class="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </main>
+
+    <%- include('./../blocks/createUserModal.ejs') %> <% users.forEach(user => { %> <%-
+    include('./../blocks/editUserModal.ejs', { user: user }) %> <% }); %> <%-
+    include('./../blocks/footer.ejs') %>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

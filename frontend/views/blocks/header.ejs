@@ -1,0 +1,80 @@
+<header class="border-bottom border-2 border-primary-subtle text-white">
+  <div class="container">
+    <nav class="navbar navbar-expand">
+      <h2>Blogging</h2>
+      <div class="navbar-nav ms-auto">
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/"
+          >Home</a
+        >
+
+        <% if (isLoggedIn === "true") { %>
+
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/blogs"
+          >Blogs</a
+        >
+
+        <% if (isAdmin === "true") { %>
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/blogs/post"
+          >Post a blog</a
+        >
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/admin"
+          ><i>Admin</i></a
+        >
+        <% } %>
+
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/profile"
+          >Profile</a
+        >
+
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/logout"
+          >Log out</a
+        >
+        <% } %> <% if (!isLoggedIn) { %>
+        <a
+          class="nav-link fs-5 me-3 link-light"
+          href="/auth/sign_in"
+          >Sign In/Up</a
+        >
+        <% } %>
+
+        <div
+          id="language-selector"
+          class="d-flex"
+        >
+          <a
+            href="/language?lang=en"
+            class="nav-link link-light d-flex align-items-center"
+            ><img
+              id="language_en"
+              src="/imgs/en.png"
+              width="20"
+              height="20"
+            />EN</a
+          >
+          <a
+            href="/language?lang=ru"
+            class="nav-link link-light d-flex align-items-center"
+            ><img
+              id="language_ru"
+              src="/imgs/ru.png"
+              width="25"
+              height="25"
+            />RU</a
+          >
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

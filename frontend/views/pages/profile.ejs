@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./../blocks/head.ejs', {title: 'User Profile'}) %>
+  <body>
+    <%- include('./../blocks/header.ejs', {isLoggedIn, isLoggedIn, isAdmin}) %>
+    <main class="container my-5">
+      <h2 class="mb-4">Profile</h2>
+      <div class="user-info mb-5">
+        <h3>Personal Information</h3>
+        <p><strong>Username:</strong> <%= user.username %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>First Name:</strong> <%= user.first_name %></p>
+        <p><strong>Last Name:</strong> <%= user.last_name %></p>
+      </div>
+
+      <div class="user-comments">
+        <h3>My Comments</h3>
+        <% if (userComments && userComments.length > 0) { %>
+        <ul class="list-group">
+          <% userComments.forEach(function(comment) { %>
+          <li class="list-group-item">
+            <p><strong>Comment on Blog:</strong> <%= comment.blogTitle %></p>
+            <p><strong>Content:</strong> <%= comment.content %></p>
+            <% if (comment.createdAt) { %>
+            <p class="text-muted">
+              <small><%= new Date(comment.createdAt).toLocaleString() %></small>
+            </p>
+            <% } %>
+          </li>
+          <% }); %>
+        </ul>
+        <% } else { %>
+        <p>You have not made any comments yet.</p>
+        <% } %>
+      </div>
+    </main>
+    <%- include('./../blocks/footer.ejs') %>
+  </body>
+</html>
